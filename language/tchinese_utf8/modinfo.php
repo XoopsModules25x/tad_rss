@@ -1,6 +1,5 @@
 <?php
-include_once XOOPS_ROOT_PATH . '/modules/tadtools/language/' . $xoopsConfig['language'] . '/modinfo_common.php';
-
+xoops_loadLanguage('modinfo_common', 'tadtools');
 define('_MI_TADRSS_NAME', '友站消息');
 define('_MI_TADRSS_AUTHOR', 'Tad (tad0616@gmail.com)');
 define('_MI_TADRSS_CREDITS', 'Michael Beck');
@@ -12,7 +11,7 @@ define('_MI_TADRSS_SHOW_NUM', '每個網站秀出新聞數');
 define('_MI_TADRSS_SHOW_NUM_DESC', '設定每個網站新聞出現的數量');
 
 define('_MI_TADRSS_DIRNAME', basename(dirname(dirname(__DIR__))));
-define('_MI_TADRSS_HELP_HEADER', __DIR__ . '/help/helpheader.html');
+define('_MI_TADRSS_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
 define('_MI_TADRSS_BACK_2_ADMIN', '管理');
 
 //help

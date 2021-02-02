@@ -1,24 +1,26 @@
 <?php
-if (file_exists("mainfile.php")) {
-    include_once "mainfile.php";
-} elseif ("../../mainfile.php") {
-    include_once "../../mainfile.php";
+use XoopsModules\Tadtools\Utility;
+
+if (file_exists(__DIR__ . '/mainfile.php')) {
+    require_once __DIR__ . '/mainfile.php';
+} elseif (dirname(dirname(__DIR__)) . '/mainfile.php') {
+    require_once dirname(dirname(__DIR__)) . '/mainfile.php';
 }
 
-include_once XOOPS_ROOT_PATH . "/modules/tad_rss/function.php";
+require_once XOOPS_ROOT_PATH . '/modules/tad_rss/function.php';
 
 //列出所有tad_rss資料
 function list_tad_rss($maxitems = 5)
 {
     global $xoopsDB, $xoopsModule, $xoopsModuleConfig, $xoopsTpl;
 
-    $sql = "select * from " . $xoopsDB->prefix("tad_rss") . " where enable='1'";
+    $sql = 'SELECT * FROM ' . $xoopsDB->prefix('tad_rss') . " WHERE enable='1'";
 
-    $result = $xoopsDB->query($sql) or web_error($sql);
+    $result = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 
-    $data = "";
+    $data = '';
     //$i=0;
-    while ($all = $xoopsDB->fetchArray($result)) {
+    while (false !== ($all = $xoopsDB->fetchArray($result))) {
         //以下會產生這些變數： $rss_sn , $title , $url , $enable
         foreach ($all as $k => $v) {
             $$k = $v;
@@ -38,30 +40,29 @@ function list_tad_rss($maxitems = 5)
 }
 
 //以 simplepie 來取得RSS
-function get_rss_by_simplepie($rss_sn = "", $url = "", $maxitems = 5)
+function get_rss_by_simplepie($rss_sn = '', $url = '', $maxitems = 5)
 {
-
     require_once XOOPS_ROOT_PATH . '/modules/tad_rss/class/simplepie/SimplePie.php';
     $feed = new SimplePie();
     $feed->set_output_encoding(_CHARSET);
     $feed->set_feed_url($url);
-    $feed->set_cache_location(XOOPS_ROOT_PATH . "/uploads/simplepie_cache");
+    $feed->set_cache_location(XOOPS_ROOT_PATH . '/uploads/simplepie_cache');
     $feed->init();
     $feed->handle_content_type();
 
-    $web_title       = $feed->get_title();
-    $web_link        = $feed->get_permalink();
+    $web_title = $feed->get_title();
+    $web_link = $feed->get_permalink();
     $web_description = $feed->get_description();
 
-    $content = "";
+    $content = '';
 
     foreach ($feed->get_items(0, $maxitems) as $item) {
-        $href              = $item->get_permalink();
-        $title             = $item->get_title();
-        $date              = $item->get_date("Y-m-d H:i");
-        $description       = $item->get_description();
+        $href = $item->get_permalink();
+        $title = $item->get_title();
+        $date = $item->get_date('Y-m-d H:i');
+        $description = $item->get_description();
         $description_clear = strip_tags($description);
-        $description_body  = strip_tags($description, '<p><a><img>');
+        $description_body = strip_tags($description, '<p><a><img>');
 
         $content .= "
       <li data-icon='false' class='inner-wrap'>
@@ -94,14 +95,14 @@ function get_rss_cate_list()
     </li>
     <li data-icon='false'><a href='{$_SERVER['PHP_SELF']}'>All</a></li>";
 
-    $sql    = "select * from " . $xoopsDB->prefix("tad_rss") . " where enable='1'";
-    $result = $xoopsDB->query($sql) or web_error($sql);
+    $sql = 'SELECT * FROM ' . $xoopsDB->prefix('tad_rss') . " WHERE enable='1'";
+    $result = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 
     while (list($rss_sn, $title, $url) = $xoopsDB->fetchRow($result)) {
-
         $list .= "<li data-icon='false'><a href='{$_SERVER['PHP_SELF']}?op=view&rss_sn={$rss_sn}'>{$title}</a></li>";
     }
-    $list .= "</ul>";
+    $list .= '</ul>';
+
     return $list;
 }
 
@@ -109,11 +110,11 @@ function get_rss_cate_list()
 function get_one_rss($rss_sn)
 {
     global $xoopsModuleConfig;
-    $one      = get_rss_data($rss_sn);
-    $url      = $one['url'];
-    $num      = 2;
+    $one = get_rss_data($rss_sn);
+    $url = $one['url'];
+    $num = 2;
     $maxitems = $xoopsModuleConfig['show_num'] * $num;
-    $rss      = get_rss_by_simplepie($rss_sn, $url, $maxitems);
+    $rss = get_rss_by_simplepie($rss_sn, $url, $maxitems);
 
     $data = "
         <ul data-role='listview' data-inset='false' data-header-theme='c' data-divider-theme='c'>
@@ -125,34 +126,33 @@ function get_one_rss($rss_sn)
 }
 
 //以流水號取得某筆RSS資料
-function get_rss_data($rss_sn = "")
+function get_rss_data($rss_sn = '')
 {
     global $xoopsDB;
     if (empty($rss_sn)) {
         return;
     }
 
-    $sql    = "select * from " . $xoopsDB->prefix("tad_rss") . " where rss_sn='$rss_sn'";
-    $result = $xoopsDB->query($sql) or web_error($sql);
-    $data   = $xoopsDB->fetchArray($result);
+    $sql = 'select * from ' . $xoopsDB->prefix('tad_rss') . " where rss_sn='$rss_sn'";
+    $result = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+    $data = $xoopsDB->fetchArray($result);
+
     return $data;
 }
 
 /*-----------執行動作判斷區----------*/
-include_once $GLOBALS['xoops']->path('/modules/system/include/functions.php');
-$op     = system_CleanVars($_REQUEST, 'op', '', 'string');
+require_once $GLOBALS['xoops']->path('/modules/system/include/functions.php');
+$op = system_CleanVars($_REQUEST, 'op', '', 'string');
 $rss_sn = system_CleanVars($_REQUEST, 'rss_sn', 0, 'int');
 
 switch ($op) {
-
-    case "view":
-        $main  = get_one_rss($rss_sn);
-        $one   = get_rss_data($rss_sn);
+    case 'view':
+        $main = get_one_rss($rss_sn);
+        $one = get_rss_data($rss_sn);
         $title = $one['title'];
         break;
-
     default:
-        $main  = list_tad_rss($xoopsModuleConfig['show_num']);
+        $main = list_tad_rss($xoopsModuleConfig['show_num']);
         $title = $xoopsModule->getVar('name');
         break;
 }
@@ -167,14 +167,14 @@ echo "
   <meta charset='" . _CHARSET . "'>
   <meta name='viewport' content='initial-scale=1.0, user-scalable=no'>
   <title>{$title}</title>
-  <link href='http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css' rel='stylesheet' type='text/css'/>
+  <link href='http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css' rel='stylesheet' type='text/css'>
   <style>
   /*.ui-header .ui-title {
     margin: 0.6em 2% 0.8em !important;
   }*/
   h2.ui-li-heading {
     white-space: normal;
-    font-size: 15px;
+    font-size: 1em;
   }
   .ui-li .ui-btn-inner a.ui-link-inherit {
     padding: 0.4em 15px;

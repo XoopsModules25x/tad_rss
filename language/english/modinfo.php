@@ -1,6 +1,5 @@
 <?php
-include_once XOOPS_ROOT_PATH . "/modules/tadtools/language/{$xoopsConfig['language']}/modinfo_common.php";
-
+xoops_loadLanguage('modinfo_common', 'tadtools');
 define('_MI_TADRSS_NAME', 'Tad RSS News');
 define('_MI_TADRSS_AUTHOR', 'Tad (tad0616@gmail.com)');
 define('_MI_TADRSS_CREDITS', 'Tad');
@@ -12,7 +11,7 @@ define('_MI_TADRSS_SHOW_NUM', 'News number');
 define('_MI_TADRSS_SHOW_NUM_DESC', 'Set the number for each site news');
 
 define('_MI_TADRSS_DIRNAME', basename(dirname(dirname(__DIR__))));
-define('_MI_TADRSS_HELP_HEADER', __DIR__ . '/help/helpheader.html');
+define('_MI_TADRSS_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
 define('_MI_TADRSS_BACK_2_ADMIN', 'Back to Administration of ');
 
 //help

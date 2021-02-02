@@ -1,3 +1,21 @@
+Tad RSS 2.3.5 (2020-03-15 released)
+================================================
+1. Correction for accessibility 2.0 AA standard
+
+Tad RSS 2.3.4 (2019-05-10 released)
+=========================================================
+1. Support XOOPS 2.5.10
+2. No longer supports PHP 5.3
+
+
+Tad RSS 2.3.3 (2019-01-01 released)
+=========================================================
+1. Support BootStrap4
+2. Remove Big5 Chinese language
+3. Support PHP 7.3
+4. Support MySQL database strict mode
+
+
 Tad RSS 2.3.2 (2017-01-15 released)
 ================================================
  1.Fixed an issue where the block could not be used
